@@ -135,7 +135,6 @@
 	$('i.icn-search').click(searchSpotify);
 	// if return is 
 	$('#search').keypress(function(e) {
-		console.log(e.which);
     	if(e.which == 13) {
 			// stops page reloading on return key
 			e.preventDefault();
