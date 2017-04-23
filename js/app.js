@@ -1,8 +1,7 @@
 (function () {
 	
 	function searchSpotify() {
-		const $search = $('#search');
-		let searchText = $search.val(); 
+		let searchText = $('#search').val(); 
 		
 		// Request data from the Spotify API to display album information
 		if (searchText !== '') {
@@ -18,6 +17,7 @@
 				type: 'album'
 			},
 			success: function (response) {
+				// build the album list with the response
 				buildList(response.albums.items, searchText);
 			}
 		});
@@ -84,15 +84,17 @@
 		let albumHTML = '<div class="album-header">';
 		// give clue if there are multiple discs for this album
 		let discNumber = 1;
+		// verify that the json object has items in it
 		if (album.tracks.items.length > 0) {
 			albumHTML += '<a class="search-result" id="search-result" href="#">< Search results</a>';
 			albumHTML += '<img class="album-art track-art" src="' + album.images[0]['url'] + '"></a></div>';
 			albumHTML += '<div class="album-track-content">';
-			albumHTML += '<h2>' + album.name + '</h2>';
+			albumHTML += '<h2>' + album.name + ' (' + album.release_date + ')</h2>';
 			albumHTML += '<p class="search-result">' + album.artists[0].name + '</p>';
 			albumHTML += '<div class="tracks"><p class="track-list">track list:</p>';
 			albumHTML += '<ul>';
 
+			// build out each track info
 			$.each(album.tracks.items, function(i, track) {
 				// if there's a second disc, display the disc info
 				if (track.disc_number > discNumber) {
@@ -104,6 +106,7 @@
 		
 			albumHTML += '</ul></div></div>';
 		} else {
+			// if for some reason there is no data, display an error
 			albumHTML += '<ul><li class="no-albums desc">There must be an issue. We can\'t find any tracks!</li></ul>';
 		}
 		
@@ -130,10 +133,14 @@
 	$('.album-content').hide();
 	// set search icon action
 	$('i.icn-search').click(searchSpotify);
+	// if return is 
 	$('#search').keypress(function(e) {
+		console.log(e.which);
     	if(e.which == 13) {
+			// stops page reloading on return key
+			e.preventDefault();
         	searchSpotify();
     	}
-	});;
+	});
 	
 }());
